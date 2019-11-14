@@ -58,25 +58,6 @@ int main(int argc, char* argv[]) {
 
 			fclose(fptr);
 			return 0;
-			/*while (ch != EOF) {
-				ch = fgetc(fptr);
-				printf(ch);
-				if (ch == '/') {
-					ch = fgetc(fptr);
-					if (ch == '*') {
-						printf(" ");
-					}
-				}
-				else if (ch == '*') {
-					ch = fgetc(fptr);
-					if (ch == '/') {
-						printf(" ");
-					}
-				}
-				else {
-					printf("%c",ch);
-				}
-			}*/
 		}
 	}
 	else if (argc > 2) {
@@ -85,8 +66,6 @@ int main(int argc, char* argv[]) {
 	else {
 		printf("One argument expected.\n");
 	}
-
-	
 
 	return 0;
 }
