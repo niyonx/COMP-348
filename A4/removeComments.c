@@ -2,7 +2,13 @@
 #include <stdbool.h>
 
 int main(int argc, char* argv[]) {
-	if (argc == 2) {
+	if (argc == 3) {
+		int arg = atoi(argv[2]);
+		if (arg == 1)
+		{
+			printf("Nested format on.\n");
+		}
+	}else if (argc == 2) {
 		//printf("The argument supplied is %s\n", argv[1]);
 		printf("");
 		char ch;
@@ -39,7 +45,7 @@ int main(int argc, char* argv[]) {
 						single = true;
 					}
 				}
-				else if (ch == "/n") {
+				else if (ch == '/n') {
 					single = false;
 				}
 				else if (ch == '*') {
@@ -50,7 +56,7 @@ int main(int argc, char* argv[]) {
 					}
 				}
 
-				if (single == false && mult == false){
+				if (single == false && mult == false) {
 					printf("%c", ch);
 				}
 				ch = fgetc(fptr);
@@ -59,9 +65,6 @@ int main(int argc, char* argv[]) {
 			fclose(fptr);
 			return 0;
 		}
-	}
-	else if (argc > 2) {
-		printf("Too many arguments supplied.\n");
 	}
 	else {
 		printf("One argument expected.\n");
