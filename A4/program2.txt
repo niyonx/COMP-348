@@ -1,0 +1,9 @@
+/* the following code is commented out
+ int a = 12; // nested comment
+ /* // nested nested comment
+ int b = a++; */
+*/
+void main()
+{
+	static char* s = "/*This is not a comment!*/";
+}
