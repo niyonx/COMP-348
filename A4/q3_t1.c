@@ -1,5 +1,7 @@
+#include <string.h>
 #include <stdio.h> 
 #include <stdlib.h> 
+
 #define MAX_STR_LEN 256
 
 struct Node {
@@ -7,50 +9,71 @@ struct Node {
 	struct Node* next;
 };
 
-void insert_dictionary_order(char* s) 
-{
+void insert_dictionary_order(struct Node** head_ref, char* new_str) {
+	struct Node* temp = (struct Node*)malloc(sizeof(struct Node));
+	struct Node* temp2 = *head_ref;
+	struct Node* prev = NULL;
 
-}
-
-void print_list(struct Node* head) 
-{
-	struct Node* temp = head;
-	while (temp != NULL)
-	{
-		printf("%s", temp->str);
-		temp = temp->next;
+	strcpy(temp->str, new_str);
+	temp->next = NULL;
+	if (temp2 == NULL) {
+		*head_ref = temp;
+		return;
+	}
+	while (temp2) {
+		if (strcasecmp(temp2->str, temp->str) > 0) {
+			temp->next = temp2;
+			if (prev == NULL) {
+				*head_ref = temp;
+			}
+			else {
+				prev->next = temp;
+			}
+			return;
+		}
+		if (temp2->next == NULL) {
+			temp2->next = temp;
+			return;
+		}
+		prev = temp2;
+		temp2 = temp2->next;
 	}
 }
 
-void push(struct Node** head_ref, char new_str) {
-	struct Node* new_node = (struct Node*)malloc(sizeof(struct Node));
-	*new_node->str = new_str;
-	new_node->next = (*head_ref);
-	(*head_ref) = new_node;
+void print_list(struct Node* head)
+{
+	struct Node* temp = head;
+
+	while (temp != NULL)
+	{
+		printf("%s ", temp->str);
+		temp = temp->next;
+	}
 }
 
 int main()
 {
 	struct Node* head = NULL;
-
-	char str[MAX_STR_LEN]= "This is a sample text. The file is terminated by a single dot: .";
-	printf("enter your string: ");
-	puts(str); //VS does not accept scanf, and online compilers don't accept strtok_s
-	//gets(str); 
-	char delimiter[] = " .,:";
+	char str[MAX_STR_LEN] = "This is a sample text. The file is terminated by a single dot: . \n";
+	char delimiter[] = " .,:\t\n";
 	char* p_token;
-	char* p_next_token;
-	
-	p_token = strtok_s(str, delimiter, &p_next_token);
-	for (int i = 0; p_token != NULL; i++)
+
+	printf("enter your string: ");
+	puts(str); //gets(str);
+
+	p_token = strtok(str, delimiter);
+
+	while (p_token)
 	{
-		printf("%s  ", p_token);
-		p_token = strtok_s(NULL, delimiter, &p_next_token);	
-		push(&head, p_token);
+		insert_dictionary_order(&head, p_token);
+
+		p_token = strtok(NULL, delimiter);
+
 	}
 
 	print_list(head);
 
-	system("\n PAUSE");
+	//system("PAUSE");
+
 	return 0;
 }
