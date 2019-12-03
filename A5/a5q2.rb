@@ -1,4 +1,5 @@
 class Inventory
+    attr_reader :manufacturer
     @@total=0
     @@array = Array.new
 
@@ -33,51 +34,80 @@ class Inventory
         print @price,", "
         print @features
     end 
+    
+    def toString
+      myInv = @category.to_s + ", " + @batteryLife.to_s + ", " + @modelNum.to_s + ", " + @color.to_s + ", " + @manufacturer.to_s + ", " + @status.to_s + ", "+ @yearBuilt.to_s + ", " + @price.to_s + ", " + @features.to_s
+      return myInv
+    end 
 end
 
 def showInventory()
     arrInventory = Inventory.all_instances
     arrInventory.each { |x| puts x.printItem }
+    if arrInventory.empty?
+      puts "Inventory is empty"
+    end
 end
 
-def arrange(invStr)
+def addToInventory(invStr)
+    puts invStr
     features = invStr.scan(/{(.*?)\}/)
     price = invStr.scan(/\d+\$/)
-    puts features
+    yearBuilt = invStr.scan(/\d\d\d\d,/)[0].chop()
+    batteryLife = invStr.scan(/\d+hrs/)
+    color = invStr.scan(/(silver|white|white|black|burgundy|blue)/)
+    status = invStr.scan(/(used|new|refurbished)/)
+    manufacturer = invStr.scan(/(apple|samsung|google|lenovo|lg)/i)
+    category = invStr.scan(/(smartphone|tablet|laptop|smartwatch)/i)
+    invStr = invStr.gsub(/{(.*?)\}/,"")
+    invStr = invStr.gsub(/\d+\$/,"")
+    invStr = invStr.gsub(/\d\d\d\d,/,"")
+    invStr = invStr.gsub(/\d+hrs/,"")
+    invStr = invStr.gsub(/(silver|white|white|black|burgundy|blue)/,"")
+    invStr = invStr.gsub(/(used|new|refurbished)/,"")
+    invStr = invStr.gsub(/(apple|samsung|google|lenovo|lg)/i,"")
+    invStr = invStr.gsub(/(smartphone|tablet|laptop|smartwatch)/i,"")
+    modelNum = invStr.scan(/[a-zA-Z\d]+/)
+    return Inventory.new(category[0].join(" "), batteryLife.join(" "), modelNum.join(" "), color.join(" "), manufacturer.join(" "), status.join(" "), yearBuilt, price.join(" "), "{"+features.join(" ")+"}")
 end
 
-def importlisting()
+def importListing()
+    fname="inventory.txt"
+    lines = File.readlines(fname)
+    lines.each { |item|
+    addToInventory(item)
+    }
 end
 
-def exportlisting()
+def exportListing()
+  out_file = File.new("out.txt", "w")
+  arrInventory = Inventory.all_instances.sort_by(&:manufacturer)
+  # puts arrInventory[0].toString
+  arrInventory.each { |x| out_file.puts x.toString }
+  out_file.close
 end
 
-def addtoInventory()
-    
-end
-
-puts "Select one of the following options: \n 1. show the inventory \n 2. import a listing \n 3. export to listing \n 4. exit. "
-myInventory = Inventory.new("Laptop", "18hrs", "809F435RW", "silver", "Apple", "new", "2019", "1800$", "{Face ID, Retina display, Core-i5}")
-myInventory = Inventory.new("Laptop", "18hrs", "809F435RW", "silver", "Apple", "new", "2019", "1800$", "{Face ID, Retina display, Core-i5}")
-myInventory = Inventory.new("Laptop", "18hrs", "809F435RW", "silver", "Apple", "new", "2019", "1800$", "{Face ID, Retina display, Core-i5}")
-
-input = gets.to_i
-case input
-when 1
-    puts "you have selected inventory display option"
-    showInventory()
-when 2
-    puts "you have selected add to inventory option, please enter the listing"
-    invStr = gets.chomp
-    arrange(invStr)
-    
-when 3
-    puts "you have selected import a list option."
-when 4
-    puts "you have selected export to list option"
-when 5
-    puts "you have selected to exit the program"
-    abort ("exiting the program...")
-else 
-    puts "invalid input detected"
+while true
+    puts "\nSelect one of the following options: \n 1. show the inventory \n 2. add to inventory \n 3. import a listing \n 4. export to listing \n 5. exit. "
+    input = gets.to_i
+    case input
+    when 1
+        puts "\nyou have selected inventory display option\n\n"
+        showInventory()
+    when 2
+        puts "\nyou have selected add to inventory option, please enter the listing\n\n"
+        invStr = gets.chomp
+        addToInventory(invStr)
+    when 3
+        puts "\nyou have selected import a list option.\n\n"
+        importListing()
+    when 4
+        puts "\nyou have selected export to list option\n\n"
+        exportListing()
+    when 5
+        puts "\nyou have selected to exit the program\n\n"
+        abort ("exiting the program...")
+    else 
+        puts "\ninvalid input detected\n\n"
+    end
 end
