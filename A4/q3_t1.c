@@ -54,21 +54,23 @@ void print_list(struct Node* head)
 int main()
 {
 	struct Node* head = NULL;
-	char str[MAX_STR_LEN] = "This is a sample text. The file is terminated by a single dot: . \n";
-	char delimiter[] = " .,:\t\n";
+	char str[MAX_STR_LEN] = "This is a sample text. thisshouldbegone\n";
+	char delimiter[] = " .,:;\t\n";
 	char* p_token;
 
 	printf("enter your string: ");
-	puts(str); //gets(str);
+	
+	scanf("%[^.]s", str);
+	//puts(str);
+	//gets(str);
 
 	p_token = strtok(str, delimiter);
-
+    
 	while (p_token)
 	{
+
 		insert_dictionary_order(&head, p_token);
-
 		p_token = strtok(NULL, delimiter);
-
 	}
 
 	print_list(head);
