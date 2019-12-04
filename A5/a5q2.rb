@@ -56,11 +56,11 @@ def addToInventory(invStr)
       return 
     end
     puts invStr
-    invStr = invStr.downcase
-    status = invStr.scan(/(used|new|refurbished)/)
+    # invStr = invStr.downcase
+    status = invStr.scan(/(used|new|refurbished)/i)
     # puts status
     # puts invStr
-    invStr = invStr.gsub(/(used|new|refurbished)/,"")
+    invStr = invStr.gsub(/(used|new|refurbished)/i,"")
     # puts invStr
     features = invStr.scan(/{(.*?)\}/)
     invStr = invStr.gsub(/{(.*?)\}/,"")
@@ -79,8 +79,16 @@ def addToInventory(invStr)
     modelNum = invStr.scan(/[a-zA-Z\d]{5,}+/)
     invStr = invStr.gsub(/[a-zA-Z\d]{5,}+/,"")
     yearBuilt = invStr.scan(/\d\d\d\d/)
+
+    manufacturer = manufacturer.join(" ")
+    if manufacturer.downcase == "lg"
+      manufacturer = manufacturer.upcase
+    else
+      manufacturer = manufacturer.downcase
+      manufacturer = manufacturer.capitalize
+    end
     # puts invStr
-    return Inventory.new(category[0].join(" "), batteryLife.join(" "), modelNum.join(" "), color.join(" "), manufacturer.join(" "), status.join(" "), yearBuilt.join(" "), price.join(" "), "{"+features.join(" ")+"}")
+    return Inventory.new(category[0].join(" ").downcase.capitalize, batteryLife.join(" "), modelNum.join(" "), color.join(" ").downcase, manufacturer, status.join(" ").downcase, yearBuilt.join(" "), price.join(" "), "{"+features.join(" ")+"}")
 end
 
 def importListing()
