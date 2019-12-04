@@ -1,3 +1,5 @@
-Laptop, 18hrs, 809F435RW, silver, Apple, new, 2019, 1800$, {Face ID, Retina display, Core-i5}
-Smartwatch, 9hrs, 3947t4f, black, Samsung, used, 2017, 250$, {activity tracker, Bluetooth, water resistant}
-Smartphone, 12hrs, 18131A, white, Apple, used, 2016, 600$, {Bluetooth, Water resistant, finger print reader, 16GB}
+12hrs, SmartPHONE, 18131A, used,Apple,600$,{Bluetooth,Water resistant,finger print reader,16GB},white,2016
+
+Used, Smartwatch, Samsung,{activity tracker, Bluetooth,water resistant},2017,250$,black,3947t4f,9hrs
+
+Apple,Laptop,silver,809F435RW,{Face ID, Retina display,Core-i5},new,2019,1800$,18hrs

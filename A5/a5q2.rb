@@ -1,5 +1,7 @@
 class Inventory
     attr_reader :manufacturer
+    attr_reader :category
+    attr_reader :modelNum
     @@total=0
     @@array = Array.new
 
@@ -50,25 +52,35 @@ def showInventory()
 end
 
 def addToInventory(invStr)
+    if invStr.length==1
+      return 
+    end
     puts invStr
-    features = invStr.scan(/{(.*?)\}/)
-    price = invStr.scan(/\d+\$/)
-    yearBuilt = invStr.scan(/\d\d\d\d,/)[0].chop()
-    batteryLife = invStr.scan(/\d+hrs/)
-    color = invStr.scan(/(silver|white|white|black|burgundy|blue)/)
+    invStr = invStr.downcase
     status = invStr.scan(/(used|new|refurbished)/)
-    manufacturer = invStr.scan(/(apple|samsung|google|lenovo|lg)/i)
-    category = invStr.scan(/(smartphone|tablet|laptop|smartwatch)/i)
-    invStr = invStr.gsub(/{(.*?)\}/,"")
-    invStr = invStr.gsub(/\d+\$/,"")
-    invStr = invStr.gsub(/\d\d\d\d,/,"")
-    invStr = invStr.gsub(/\d+hrs/,"")
-    invStr = invStr.gsub(/(silver|white|white|black|burgundy|blue)/,"")
+    # puts status
+    # puts invStr
     invStr = invStr.gsub(/(used|new|refurbished)/,"")
+    # puts invStr
+    features = invStr.scan(/{(.*?)\}/)
+    invStr = invStr.gsub(/{(.*?)\}/,"")
+    price = invStr.scan(/\d+\$/)
+    invStr = invStr.gsub(/\d+\$/,"")
+    # yearBuilt = invStr.scan(/\d\d\d\d/)[0].chop()
+    batteryLife = invStr.scan(/\d+hrs/)
+    invStr = invStr.gsub(/\d+hrs/,"")
+    color = invStr.scan(/(silver|white|white|black|burgundy|blue)/)
+    invStr = invStr.gsub(/(silver|white|white|black|burgundy|blue)/,"")
+    
+    manufacturer = invStr.scan(/(apple|samsung|google|lenovo|lg)/i)
     invStr = invStr.gsub(/(apple|samsung|google|lenovo|lg)/i,"")
+    category = invStr.scan(/(smartphone|tablet|laptop|smartwatch)/i)
     invStr = invStr.gsub(/(smartphone|tablet|laptop|smartwatch)/i,"")
-    modelNum = invStr.scan(/[a-zA-Z\d]+/)
-    return Inventory.new(category[0].join(" "), batteryLife.join(" "), modelNum.join(" "), color.join(" "), manufacturer.join(" "), status.join(" "), yearBuilt, price.join(" "), "{"+features.join(" ")+"}")
+    modelNum = invStr.scan(/[a-zA-Z\d]{5,}+/)
+    invStr = invStr.gsub(/[a-zA-Z\d]{5,}+/,"")
+    yearBuilt = invStr.scan(/\d\d\d\d/)
+    # puts invStr
+    return Inventory.new(category[0].join(" "), batteryLife.join(" "), modelNum.join(" "), color.join(" "), manufacturer.join(" "), status.join(" "), yearBuilt.join(" "), price.join(" "), "{"+features.join(" ")+"}")
 end
 
 def importListing()
@@ -81,9 +93,12 @@ end
 
 def exportListing()
   out_file = File.new("out.txt", "w")
-  arrInventory = Inventory.all_instances.sort_by(&:manufacturer)
+  
+  arrInventory = Inventory.all_instances.sort_by(&:modelNum)
+  arrInventory = arrInventory.sort_by(&:category)
+  arrInventory = arrInventory.sort_by(&:manufacturer)
   # puts arrInventory[0].toString
-  arrInventory.each { |x| out_file.puts x.toString }
+  arrInventory.each { |x| out_file.puts x.toString+"\n\n" }
   out_file.close
 end
 
